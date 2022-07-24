@@ -1,0 +1,15 @@
+{
+	"private": true,
+	"version": "0.0.0",
+	"scripts": {
+		"deploy": "wrangler publish src/lib.rs",
+		"dev": "wrangler dev src/lib.rs --local"
+	},
+	"devDependencies": {
+		"wrangler": "^2.0.0"
+	},
+	"volta": {
+		"node": "16.16.0",
+		"yarn": "1.22.19"
+	}
+}
