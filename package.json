@@ -2,11 +2,12 @@
 	"private": true,
 	"version": "0.0.0",
 	"scripts": {
-		"deploy": "wrangler publish src/lib.rs",
-		"dev": "wrangler dev src/lib.rs --local"
+		"dev": "wrangler dev",
+		"deploy": "wrangler publish",
+		"tunnel": "cloudflared tunnel -n sleme-dev --url localhost:8787 --ui"
 	},
 	"devDependencies": {
-		"wrangler": "^2.0.0"
+		"wrangler": "^2.0.22"
 	},
 	"volta": {
 		"node": "16.16.0",
