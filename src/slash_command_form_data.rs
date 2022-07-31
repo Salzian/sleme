@@ -1,10 +1,8 @@
-use std::fmt::{Display, Formatter};
-
 use worker::{FormData, FormEntry};
 
 #[derive(Debug)]
 pub(crate) struct SlashCommandFormData {
-    token: String,
+    pub(crate) token: String,
     team_id: String,
     team_domain: String,
     enterprise_id: Option<String>,
@@ -16,7 +14,7 @@ pub(crate) struct SlashCommandFormData {
     command: String,
     text: String,
     response_url: String,
-    trigger_id: String,
+    pub(crate) trigger_id: String,
     api_app_id: String,
 }
 
