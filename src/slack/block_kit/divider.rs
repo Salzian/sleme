@@ -1,14 +1,22 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(default)]
-pub(crate) struct Divider {
+pub struct DividerBlock {
     #[serde(rename = "type")]
-    type_: &'static str,
+    type_: String,
 }
 
-impl Default for Divider {
+impl DividerBlock {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for DividerBlock {
     fn default() -> Self {
-        Self { type_: "divider" }
+        Self {
+            type_: "divider".to_string(),
+        }
     }
 }

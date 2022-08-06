@@ -1,11 +1,11 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize)]
-pub(crate) struct PlainText {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PlainText {
     #[serde(rename = "type")]
-    type_: &'static str,
+    type_: String,
 
-    pub(crate) text: String,
+    pub text: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     emoji: Option<bool>,
@@ -15,9 +15,9 @@ pub(crate) struct PlainText {
 }
 
 impl PlainText {
-    pub(crate) fn new(text: &str) -> Self {
+    pub fn new(text: &str) -> Self {
         Self {
-            type_: "plain_text",
+            type_: "plain_text".to_string(),
             text: text.to_string(),
             emoji: None,
             verbatim: None,

@@ -1,4 +1,5 @@
-pub(crate) mod block;
-pub(crate) mod divider;
-pub(crate) mod plain_text;
-pub(crate) mod view;
+pub mod block;
+pub mod divider;
+mod input;
+pub mod plain_text;
+pub mod view;
