@@ -53,7 +53,7 @@ jobs:
       - build
 
     # Only run the CD if a push to the prod branch triggered the action.
-    if: github.ref_name == "prod" && github.event_name == "push"
+    if: github.ref_name == 'prod' && github.event_name == 'push'
 
     steps:
       - name: Checkout
