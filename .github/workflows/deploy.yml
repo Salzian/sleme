@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
       - "*"
 
 jobs:
-  build:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    environment:
-      name: "prod"
+    environment: prod
 
     steps:
       - name: Checkout
@@ -21,5 +21,5 @@ jobs:
         with:
           apiKey: ${{ secrets.CF_API_KEY }}
           email: ${{ secrets.CF_EMAIL }}
-          wranglerVersion: '2.0.25'
+          wranglerVersion: "2.0.25"
           environment: "prod"
