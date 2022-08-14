@@ -2,13 +2,14 @@ name: Deploy
 
 on:
   push:
-    branches: [ "dev", "prod" ]
-  pull_request:
-    branches: [ "dev", "prod" ]
+    branches:
+      - "prod"
+      - "*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: prod
 
     steps:
       - name: Checkout
