@@ -30,6 +30,7 @@ jobs:
           key: ${{ runner.os }}-worker-build
 
       - name: Install worker-build
+        if: steps.cache-worker-build.outputs.cache-hit != 'true'
         run: cargo install worker-build
 
       - name: Build release using worker-build
