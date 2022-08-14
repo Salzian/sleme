@@ -22,6 +22,13 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Cache worker-build
+        id: cache-worker-build
+        uses: actions/cache@v3
+        with:
+          path: $HOME/.cargo/bin/worker-build
+          key: ${{ runner.os }}-worker-build
+
       - name: Install worker-build
         run: cargo install worker-build
 
