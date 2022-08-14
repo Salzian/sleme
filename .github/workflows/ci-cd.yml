@@ -19,7 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup NodeJS for yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install yarn dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+
       - name: Cache cargo
+        id: cache-cargo
         uses: actions/cache@v3
         with:
           path: |
@@ -30,9 +40,13 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+      - name: Install worker-build
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        run: cargo install worker-build
+
       # Replace with worker-build or wrangler-build?
       - name: Build
-        run: cargo build --verbose
+        run: yarn build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -59,21 +73,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af #@v1
-        with:
-          toolchain: stable
-          override: true
-
-      - name: Cache worker-build
-        id: cache-worker-build
+      - name: Cache cargo
+        id: cache-cargo
         uses: actions/cache@v3
         with:
-          path: $HOME/.cargo/bin/worker-build
-          key: ${{ runner.os }}-worker-build
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install worker-build
-        if: steps.cache-worker-build.outputs.cache-hit != 'true'
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
         run: cargo install worker-build
 
       - name: Download build artifact
