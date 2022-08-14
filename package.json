@@ -5,7 +5,7 @@
 		"dev": "wrangler dev --env dev",
 		"deploy": "wrangler publish --env prod",
 		"tunnel": "cloudflared tunnel -n sleme-dev --url localhost:8787 --ui",
-		"build": "wrangler build"
+		"build": "wrangler publish --env dev --dry-run --outdir=dist"
 	},
 	"devDependencies": {
 		"wrangler": "^2.0.25"
