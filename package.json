@@ -2,13 +2,13 @@
 	"private": true,
 	"version": "0.0.0",
 	"scripts": {
-		"dev": "wrangler dev",
-		"deploy": "wrangler publish",
+		"dev": "wrangler dev --env dev",
+		"deploy": "wrangler publish --env prod",
 		"tunnel": "cloudflared tunnel -n sleme-dev --url localhost:8787 --ui",
 		"build": "wrangler build"
 	},
 	"devDependencies": {
-		"wrangler": "^2.0.22"
+		"wrangler": "^2.0.25"
 	},
 	"volta": {
 		"node": "16.16.0",

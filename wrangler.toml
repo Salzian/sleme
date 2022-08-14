@@ -1,11 +1,18 @@
 name = "sleme"
-workers_dev = true
 
 main = "build/worker/shim.mjs"
-compatibility_date = "2022-01-20"
-
-[vars]
-WORKERS_RS_VERSION = "0.0.9"
+compatibility_date = "2022-08-13"
 
 [build]
 command = "cargo install -q worker-build && worker-build --release"
+
+[env.dev]
+workers_dev = true
+vars = { ENV = "dev" }
+
+[env.prod]
+name = "sleme"
+routes = [
+    { pattern = "sleme.salzian.dev", custom_domain = true }
+]
+vars = { ENV = "prod" }
