@@ -40,10 +40,6 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Install worker-build
-        if: steps.cache-cargo.outputs.cache-hit != 'true'
-        run: cargo install worker-build
-
       # Replace with worker-build or wrangler-build?
       - name: Build
         run: yarn build
