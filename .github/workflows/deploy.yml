@@ -22,6 +22,13 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+          components: worker-build
+
+      - name: Install worker-build
+        run: cargo install worker-build
+
+      - name: Build release using worker-build
+        run: worker-build --release
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
