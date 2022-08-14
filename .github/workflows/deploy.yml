@@ -6,6 +6,10 @@ on:
       - "prod"
       - "*"
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.ref }}
+
 jobs:
   deploy:
     name: Deploy
