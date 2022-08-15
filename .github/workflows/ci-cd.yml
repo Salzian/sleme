@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Setup cargo cache
         id: cache-cargo
         uses: actions/cache@v3
@@ -41,9 +44,6 @@ jobs:
 
       - name: Install yarn dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-
-      - name: Checkout
-        uses: actions/checkout@v3
 
       # Replace with worker-build or wrangler-build?
       - name: Build
@@ -72,6 +72,9 @@ jobs:
     #if: github.ref_name == 'prod' && github.event_name == 'push'
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup cargo cache
         id: cache-cargo
         uses: actions/cache@v3
@@ -89,9 +92,6 @@ jobs:
         with:
           crate: worker-build
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -99,7 +99,6 @@ jobs:
 
       - name: Build release using worker-build
         run: worker-build --release
-
 
       # TODO Replace with yarn provided wrangler?
 #      - name: Publish
