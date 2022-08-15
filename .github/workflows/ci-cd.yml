@@ -40,6 +40,11 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+      - name: Install worker-build
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: worker-build
+
       # Replace with worker-build or wrangler-build?
       - name: Build
         run: yarn build
