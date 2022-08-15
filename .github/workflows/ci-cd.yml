@@ -16,19 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup NodeJS for yarn
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-
-      - name: Install yarn dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
-
-      - name: Cache cargo
+      - name: Setup cargo cache
         id: cache-cargo
         uses: actions/cache@v3
         with:
@@ -45,6 +33,18 @@ jobs:
         with:
           crate: worker-build
 
+      - name: Setup NodeJS for yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install yarn dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
       # Replace with worker-build or wrangler-build?
       - name: Build
         run: yarn build
@@ -54,6 +54,7 @@ jobs:
         with:
           name: build
           path: |
+            target\
             build\
             dist\
 
@@ -61,7 +62,7 @@ jobs:
         run: cargo test --verbose
 
   deploy:
-    name: CD
+    name: Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
     environment: prod
     needs:
@@ -71,10 +72,7 @@ jobs:
     #if: github.ref_name == 'prod' && github.event_name == 'push'
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Cache cargo
+      - name: Setup cargo cache
         id: cache-cargo
         uses: actions/cache@v3
         with:
@@ -87,10 +85,14 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install worker-build
-        if: steps.cache-cargo.outputs.cache-hit != 'true'
-        run: cargo install worker-build
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: worker-build
 
-      - name: Download build artifact
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: build
