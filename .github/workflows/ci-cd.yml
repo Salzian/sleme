@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - prod
-      - * # for testing
+      - "*" # for testing
 
 concurrency:
   cancel-in-progress: true
