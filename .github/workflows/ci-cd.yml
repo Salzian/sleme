@@ -65,33 +65,6 @@ jobs:
             build\
             dist\
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup cargo cache
-        id: cache-cargo
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Install worker-build
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: --bins worker-build
-
-      - name: Run tests
-        run: cargo test --verbose
-
   # TODO Add deploy stage
 
   deploy:
