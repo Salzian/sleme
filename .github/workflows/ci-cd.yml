@@ -87,7 +87,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: worker-build
+          args: --bins worker-build
 
       - name: Run tests
         run: cargo test --verbose
@@ -121,9 +121,10 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Install worker-build
-        uses: baptiste0928/cargo-install@v1
+        uses: actions-rs/cargo@v1
         with:
-          crate: worker-build
+          command: install
+          args: --bins worker-build
 
       - name: Download build artifacts
         uses: actions/download-artifact@v3
