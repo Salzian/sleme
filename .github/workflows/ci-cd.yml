@@ -30,18 +30,12 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          components: cargo
-          toolchain: stable
-
       - name: Install worker-build
         uses: actions-rs/cargo@v1
+        continue-on-error: true
         with:
           command: install
-          args: worker-build
+          args: --bins worker-build
 
       - name: Setup NodeJS for yarn
         uses: actions/setup-node@v3
@@ -94,6 +88,7 @@ jobs:
 
       - name: Install worker-build
         uses: actions-rs/cargo@v1
+        continue-on-error: true
         with:
           command: install
           args: --bins worker-build
