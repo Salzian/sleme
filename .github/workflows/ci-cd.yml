@@ -3,8 +3,9 @@ name: CI/CD
 on:
   push:
     branches:
-      - "prod"
-      - "*"
+      - main
+      - prod
+      - * # for testing
 
 concurrency:
   cancel-in-progress: true
@@ -22,13 +23,11 @@ jobs:
         id: cache-cargo
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          path: ~/.cargo
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+            cargo-
 
       - name: Setup rust toolchain
         uses: actions-rs/toolchain@v1
@@ -85,13 +84,11 @@ jobs:
         id: cache-cargo
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          path: ~/.cargo
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+            cargo-
 
       - name: Setup rust toolchain
         uses: actions-rs/toolchain@v1
