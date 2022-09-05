@@ -45,12 +45,12 @@ jobs:
           args: --bins worker-build
 
       - name: Build
-        run: worker-build --dev
+        run: worker-build --release
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: build-${{ github.sha }}
           path: |
             ./target
             ./build
@@ -81,28 +81,10 @@ jobs:
             cargo-${{ runner.os }}-
             cargo-
 
-      - name: Setup rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          default: true
-          target: wasm32-unknown-unknown
-
-      - name: Install worker-build
-        uses: actions-rs/cargo@v1
-        continue-on-error: true
-        with:
-          command: install
-          args: --bins worker-build
-
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: build
-
-      - name: Build release using worker-build
-        run: worker-build --release
+          name: build-${{ github.sha }}
 
       # TODO Replace with yarn provided wrangler?
 #      - name: Publish
