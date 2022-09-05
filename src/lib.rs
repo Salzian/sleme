@@ -117,7 +117,7 @@ async fn handle_commands(
                 }
             });
 
-            Response::empty()
+            Response::ok("Command received")
         }
         _ => {
             console_debug!("Unknown command: {}", path);
