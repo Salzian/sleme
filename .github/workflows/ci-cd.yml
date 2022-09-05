@@ -44,15 +44,6 @@ jobs:
           command: install
           args: --bins worker-build
 
-      - name: Setup NodeJS for yarn
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-
-      - name: Install yarn dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
-
       - name: Build
         run: worker-build --dev
 
