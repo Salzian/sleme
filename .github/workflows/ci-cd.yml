@@ -52,9 +52,9 @@ jobs:
         with:
           name: build
           path: |
-            target\
-            build\
-            dist\
+            ./target
+            ./build
+            ./dist
 
   # TODO Add deploy stage
 
