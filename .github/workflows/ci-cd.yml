@@ -94,4 +94,4 @@ jobs:
         with:
           name: build-${{ github.sha }}
 
-      - run: yarn deploy
+      - run: yarn run deploy
