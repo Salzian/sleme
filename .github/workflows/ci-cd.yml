@@ -51,14 +51,16 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.sha }}
-          path: ./build
+          path: |
+            ./build
+            ./target
 
   # TODO Add deploy stage
 
   deploy:
     runs-on: ubuntu-latest
     environment: prod
-    if: github.ref == 'refs/heads/prod'
+    #if: github.ref == 'refs/heads/prod'
     needs:
       - build
 
