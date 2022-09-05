@@ -92,6 +92,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-${{ github.sha }}
+          path: ./build
 
       - run: cat package.json
       - run: yarn run deploy
