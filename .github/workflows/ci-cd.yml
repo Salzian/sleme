@@ -94,5 +94,6 @@ jobs:
           name: build-${{ github.sha }}
           path: ./build
 
-      - run: cat package.json
       - run: yarn run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
