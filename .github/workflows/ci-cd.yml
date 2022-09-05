@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   build:
-    name: CI
     runs-on: ubuntu-latest
 
     steps:
@@ -31,10 +30,18 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Install worker-build
-        uses: baptiste0928/cargo-install@v1
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
         with:
-          crate: worker-build
+          profile: minimal
+          components: cargo
+          toolchain: stable
+
+      - name: Install worker-build
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: worker-build
 
       - name: Setup NodeJS for yarn
         uses: actions/setup-node@v3
@@ -45,7 +52,7 @@ jobs:
       - name: Install yarn dependencies
         run: yarn install --immutable --immutable-cache --check-cache
 
-      # Replace with worker-build or wrangler-build?
+      # Replace with worker-build or wrangler build?
       - name: Build
         run: yarn build
 
@@ -58,11 +65,34 @@ jobs:
             build\
             dist\
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup cargo cache
+        id: cache-cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install worker-build
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: worker-build
+
       - name: Run tests
         run: cargo test --verbose
 
   deploy:
-    name: Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
     environment: prod
     needs:
