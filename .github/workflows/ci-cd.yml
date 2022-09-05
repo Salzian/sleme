@@ -51,16 +51,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.sha }}
-          path: |
-            ./target
-            ./build
-            ./dist
+          path: ./build
 
   # TODO Add deploy stage
 
   deploy:
     runs-on: ubuntu-latest
     environment: prod
+    if: github.ref == 'refs/heads/prod'
     needs:
       - build
 
@@ -86,10 +84,8 @@ jobs:
         with:
           name: build-${{ github.sha }}
 
-      # TODO Replace with yarn provided wrangler?
-#      - name: Publish
-#        uses: cloudflare/wrangler-action@2.0.0
-#        with:
-#          apiToken: ${{ secrets.CF_API_TOKEN }}
-#          wranglerVersion: "2.0.25"
-#          environment: "prod"
+      - name: Publish
+        uses: cloudflare/wrangler-action@2
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          environment: "prod"
