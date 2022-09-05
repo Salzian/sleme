@@ -58,12 +58,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: prod
-    if: github.ref == 'refs/heads/prod'
     needs:
       - build
 
     # Only run the CD if a push to the prod branch triggered the action.
-    #if: github.ref_name == 'prod' && github.event_name == 'push'
+    # TODO if: github.ref_name == 'prod' && github.event_name == 'push'
 
     steps:
       - name: Checkout code
