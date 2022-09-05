@@ -92,11 +92,14 @@ jobs:
       - name: Run tests
         run: cargo test --verbose
 
+  # TODO Add deploy stage
+
   deploy:
     runs-on: ubuntu-latest
     environment: prod
     needs:
       - build
+      - test
 
     # Only run the CD if a push to the prod branch triggered the action.
     #if: github.ref_name == 'prod' && github.event_name == 'push'
