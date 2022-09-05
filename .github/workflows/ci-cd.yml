@@ -35,7 +35,6 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          override: true
           default: true
           target: wasm32-unknown-unknown
 
