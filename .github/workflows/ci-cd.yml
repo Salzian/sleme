@@ -46,9 +46,8 @@ jobs:
       - name: Install yarn dependencies
         run: yarn install --immutable --immutable-cache --check-cache
 
-      # Replace with worker-build or wrangler build?
       - name: Build
-        run: yarn build
+        run: worker-build --dev
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
