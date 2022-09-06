@@ -36,19 +36,24 @@ jobs:
           path: |
             ~/.cargo
             ./target
-          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          key: cargo-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
+            cargo-${{ runner.os }}-${{ github.ref_name }}-
+            cargo-${{ runner.os }}-main-
+            cargo-${{ runner.os }}-prod-
             cargo-${{ runner.os }}-
-            cargo-
 
       - name: Setup rust toolchain
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          default: true
           target: wasm32-unknown-unknown
+          default: true
+          profile: minimal
 
       - name: Install worker-build
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/cargo@v1
         continue-on-error: true
         with:
