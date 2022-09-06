@@ -4,16 +4,17 @@ on:
   push:
     branches:
       - main
-      - prod
   pull_request:
     branches:
       - main
-      - prod
     types:
       - opened # default
       - synchronize # default
       - reopened # default
       - ready_for_review # Run CI when PR is undrafted. Otherwise, another push is required.
+  release:
+    types:
+      - released
   repository_dispatch: # Needed for Cloudflare Deploy button
 
 concurrency:
@@ -74,12 +75,11 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    # Only run the CD if a push to the prod branch triggered the action.
-    if: github.ref_name == 'prod' && github.event_name == 'push'
+    # Only run the CD on releases
+    if: github.event_name == 'release' && github.event.action == 'released'
     environment: prod
     needs:
       - build
-
 
     steps:
       - name: Checkout code
