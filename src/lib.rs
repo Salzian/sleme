@@ -27,7 +27,7 @@ mod utils;
 mod view_open_req_res;
 
 #[event(fetch)]
-pub async fn main(mut request: Request, env: Env, context: Context) -> Result<Response> {
+pub async fn main(mut request: Request, env: Env, _context: Context) -> Result<Response> {
     utils::set_panic_hook();
 
     let method = request.method();
@@ -42,88 +42,85 @@ pub async fn main(mut request: Request, env: Env, context: Context) -> Result<Re
         return Response::error("Not Found", 404);
     }
 
-    return if path.starts_with("/commands/") {
+    if path.starts_with("/commands/") {
         console_debug!("Received slash command request");
-        handle_commands(&mut request, env, context, path).await
+        handle_commands(&mut request, env, path).await
     } else if path == "/interactivity" {
         console_debug!("Received interactivity request");
         handle_interactivity(&mut request).await
     } else {
         console_debug!("Unknown path: {:#?} {:#?}", &method, path);
         Response::error("Not Found", 404)
-    };
+    }
 }
 
 async fn handle_commands(
     request: &mut Request,
     env: Env,
-    context: Context,
     path: &str,
 ) -> Result<Response> {
     let form_data = request.form_data().await.unwrap();
     let slash_command_form_data = SlashCommandFormData::from_form_data(form_data);
 
-    return match path {
+    match path {
         "/commands/meme" => {
-            context.wait_until(async move {
-                let view = View {
-                    type_: ViewType::Modal,
-                    title: PlainText::new("Meme Generator 9000"),
-                    blocks: vec![
-                        Section(SectionBlock::new(PlainText::new("This is a test"))),
-                        Divider(DividerBlock::default()),
-                        Section(SectionBlock::new(PlainText::new("This is a test 2"))),
-                    ],
-                    close: None,
-                    submit: Some(PlainText::new("Send to channel")),
-                    private_metadata: None,
-                    callback_id: Some("my-callback-id".to_string()),
-                    clear_on_close: None,
-                    notify_on_close: None,
-                    external_id: None,
-                    submit_disabled: None,
-                };
+            let view = View {
+                type_: ViewType::Modal,
+                title: PlainText::new("Meme Generator 9000"),
+                blocks: vec![
+                    Section(SectionBlock::new(PlainText::new("This is a test"))),
+                    Divider(DividerBlock::default()),
+                    Section(SectionBlock::new(PlainText::new("This is a test 2"))),
+                ],
+                close: None,
+                submit: Some(PlainText::new("Send to channel")),
+                private_metadata: None,
+                callback_id: Some("my-callback-id".to_string()),
+                clear_on_close: None,
+                notify_on_close: None,
+                external_id: None,
+                submit_disabled: None,
+            };
 
-                let slack_access_token = env
-                    .secret("SLACK_ACCESS_TOKEN")
-                    .expect("Missing secret: SLACK_ACCESS_TOKEN")
-                    .to_string();
+            let slack_oauth_token = env
+                .secret("SLACK_OAUTH_TOKEN")
+                .expect("Missing secret: SLACK_OAUTH_TOKEN")
+                .to_string();
 
-                let client = reqwest::Client::new();
+            let client = reqwest::Client::new();
 
-                let open_request = ViewOpenRequest {
-                    trigger_id: slash_command_form_data.trigger_id,
-                    view,
-                };
+            let open_request = ViewOpenRequest {
+                trigger_id: slash_command_form_data.trigger_id,
+                view,
+            };
 
-                let json_body = to_string(&open_request).unwrap();
+            let json_body = to_string(&open_request).unwrap();
 
-                let response = client
-                    .post("https://slack.com/api/views.open")
-                    .bearer_auth(slack_access_token)
-                    .header("Content-Type", "application/json")
-                    .body(json_body)
-                    .send()
-                    .await
-                    .expect("Failed to send request");
+            let response = client
+                .post("https://slack.com/api/views.open")
+                .bearer_auth(slack_oauth_token)
+                .header("Content-Type", "application/json")
+                .body(json_body)
+                .send()
+                .await
+                .expect("Failed to send request");
 
-                let view_open_response = response
-                    .json::<ViewOpenResponse>()
-                    .await
-                    .expect("Failed to parse response");
+            let view_open_response = response
+                .json::<ViewOpenResponse>()
+                .await
+                .expect("Failed to parse response");
 
-                if !view_open_response.ok {
-                    panic!("ViewOpenResponse error: {:#?}", view_open_response);
-                }
-            });
+            if !view_open_response.ok {
+                panic!("ViewOpenResponse error: {:#?}", view_open_response);
+            }
 
-            Response::ok("Command received")
+            Response::empty()
         }
         _ => {
             console_debug!("Unknown command: {}", path);
             Response::error("Not Found", 404)
         }
-    };
+    }
 }
 
 async fn handle_interactivity(request: &mut Request) -> Result<Response> {
@@ -138,19 +135,13 @@ async fn handle_interactivity(request: &mut Request) -> Result<Response> {
         from_str(payload.as_str()).expect("Failed to parse payload as InteractivityRequest");
 
     return match interactivity_request.type_.as_str() {
-        "block_actions" => {
-            Response::ok("Not Implemented")
-        }
-        "shortcut" => {
-            Response::ok("Not Implemented")
-        }
+        "block_actions" => Response::ok("Not Implemented"),
+        "shortcut" => Response::ok("Not Implemented"),
         "view_submission" => {
             console_debug!("view_submission: {:#?}", interactivity_request);
             Response::empty()
         }
-        "view_closed" => {
-            Response::ok("Not Implemented")
-        }
+        "view_closed" => Response::ok("Not Implemented"),
         _ => {
             console_error!(
                 "Unknown interactivity request type: {:#?}",
@@ -158,5 +149,5 @@ async fn handle_interactivity(request: &mut Request) -> Result<Response> {
             );
             Response::error("Not Found", 404)
         }
-    }
+    };
 }

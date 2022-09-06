@@ -1,17 +1,17 @@
 {
-	"devDependencies": {
-		"wrangler": "^2.0.25"
-	},
-	"private": true,
-	"scripts": {
-		"build": "wrangler publish --env dev --dry-run --outdir=dist",
-		"deploy:prod": "wrangler publish --env prod",
-		"dev": "wrangler dev --env dev",
-		"tunnel": "cloudflared tunnel -n sleme-dev --url localhost:8787 --ui"
-	},
-	"version": "0.0.0",
-	"volta": {
-		"node": "16.16.0",
-		"yarn": "1.22.19"
-	}
+   "devDependencies": {
+    "wrangler": "^2.0.25"
+  },
+  "private": true,
+  "scripts": {
+    "build": "wrangler publish --env dev --dry-run --outdir=dist",
+    "deploy:prod": "wrangler publish --env prod",
+    "dev": "wrangler dev --env dev",
+    "tunnel": "cloudflared tunnel run --token $(cloudflared tunnel token $CLOUDFLARE_TUNNEL_NAME) $CLOUDFLARE_TUNNEL_NAME"
+  },
+  "version": "0.0.0",
+  "volta": {
+    "node": "16.16.0",
+    "yarn": "1.22.19"
+  }
 }
