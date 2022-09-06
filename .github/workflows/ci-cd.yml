@@ -42,6 +42,7 @@ jobs:
             cargo-
 
       - name: Setup rust toolchain
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -49,6 +50,7 @@ jobs:
           target: wasm32-unknown-unknown
 
       - name: Install worker-build
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/cargo@v1
         continue-on-error: true
         with:
