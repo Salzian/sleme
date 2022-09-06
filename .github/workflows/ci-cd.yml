@@ -45,9 +45,9 @@ jobs:
         if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
-          default: true
           target: wasm32-unknown-unknown
+          default: true
+          profile: minimal
 
       - name: Install worker-build
         if: steps.cache-cargo.outputs.cache-hit != 'true'
