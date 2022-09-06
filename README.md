@@ -1,20 +1,23 @@
 # Sleme
 
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/salzian/sleme)
+
 ## Development
 
 ### Repo structure
 
 The repo has two important branches:
 
-* `develop` - The main branch for production. This branch contains the latest merged changes.
-* `main` - The currently deployed state on production.
+* `main` - The main branch for development. This branch contains the latest merged changes.
+* `prod` - The currently deployed state on production.
 
 ### Forwarding the development worker
 
-> This chapter is outdated and needs to be reworked. You cannot share a locally set-up cloudflare tunnel between
-> multiple development machines.
+> This chapter is outdated and needs to be reworked.
+> You cannot share a locally set-up cloudflare tunnel between multiple development machines.
 
 <details>
+
 When running `yarn dev`, wrangler runs a development server.
 Cloudflare temporarily hosts this server to allow access to KV, Durable Objects and other Cloudflare services.
 It forwards the service to the local address `http://localhost:8787`.
@@ -41,6 +44,7 @@ Otherwise, you are out of luck and Cloudflare will also autogenerate a random, n
    By default the tunnel runs in UI mode and after a short wait, you see your tunnel becoming available.
    If you don't have a DNS entry pointing towards your tunnel yet, `cloudflared` sets it up for you.
 5. Your development worker will now be available at your provided hostname.
+
 </details>
 
 [expose-wrangler]: https://github.com/cloudflare/wrangler2/issues/696
