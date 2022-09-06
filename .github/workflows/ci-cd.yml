@@ -6,15 +6,15 @@ on:
       - main
     paths-ignore:
       - 'README.md'
-      - 'yarn.lock'
       - 'package.json'
+      - 'yarn.lock'
   pull_request:
     branches:
       - main
     paths-ignore:
       - 'README.md'
-      - 'yarn.lock'
       - 'package.json'
+      - 'yarn.lock'
     types:
       - opened # default
       - synchronize # default
