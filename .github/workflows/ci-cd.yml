@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - 'package.json'
+      - 'yarn.lock'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - 'package.json'
+      - 'yarn.lock'
     types:
       - opened # default
       - synchronize # default
