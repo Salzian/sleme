@@ -42,7 +42,7 @@ jobs:
             cargo-
 
       - name: Setup rust toolchain
-        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        #if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
           target: wasm32-unknown-unknown
