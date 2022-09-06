@@ -45,6 +45,7 @@ jobs:
         #if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/toolchain@v1
         with:
+          toolchain: stable
           target: wasm32-unknown-unknown
           default: true
           profile: minimal
