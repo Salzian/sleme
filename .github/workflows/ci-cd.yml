@@ -36,12 +36,12 @@ jobs:
           path: |
             ~/.cargo
             ./target
-          key: cargo-${{ runner.os }}-${GITHUB_REF##*/}-${{ hashFiles('**/Cargo.lock') }}
+          key: cargo-${{ runner.os }}-$(GITHUB_REF##*/)-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             cargo-${{ runner.os }}-${{ github.ref_name }}-
             cargo-${{ runner.os }}-main-
+            cargo-${{ runner.os }}-prod-
             cargo-${{ runner.os }}-
-            cargo-
 
       - name: Setup rust toolchain
         uses: actions-rs/toolchain@v1
