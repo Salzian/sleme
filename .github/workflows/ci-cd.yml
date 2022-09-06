@@ -1,0 +1,111 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - prod
+  pull_request:
+    branches:
+      - main
+      - prod
+    types:
+      - opened # default
+      - synchronize # default
+      - reopened # default
+      - ready_for_review # Run CI when PR is undrafted. Otherwise, another push is required.
+  repository_dispatch: # Needed for Cloudflare Deploy button
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup cargo cache
+        id: cache-cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+            cargo-
+
+      - name: Setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          target: wasm32-unknown-unknown
+
+      - name: Install worker-build
+        uses: actions-rs/cargo@v1
+        continue-on-error: true
+        with:
+          command: install
+          args: --bins worker-build
+
+      - name: Build
+        run: worker-build --release
+
+      - name: Upload build artifacts
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ github.sha }}
+          path: ./build
+
+  # TODO Add deploy stage
+
+  deploy:
+    runs-on: ubuntu-latest
+    # Only run the CD if a push to the prod branch triggered the action.
+    if: github.ref_name == 'prod' && github.event_name == 'push'
+    environment: prod
+    needs:
+      - build
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Setup cargo cache
+        id: cache-cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+            cargo-
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-${{ github.sha }}
+          path: ./build
+
+      - run: yarn run deploy:prod
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
