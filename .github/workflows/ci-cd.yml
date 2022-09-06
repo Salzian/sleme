@@ -65,7 +65,7 @@ jobs:
         run: worker-build --release
 
       - name: Upload build artifacts
-        if: github.event_name == 'push'
+        if: github.event_name == 'release'
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.sha }}
@@ -99,10 +99,12 @@ jobs:
           path: |
             ~/.cargo
             ./target
-          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          key: cargo-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
+            cargo-${{ runner.os }}-${{ github.ref_name }}-
+            cargo-${{ runner.os }}-main-
+            cargo-${{ runner.os }}-prod-
             cargo-${{ runner.os }}-
-            cargo-
 
       - name: Download build artifacts
         uses: actions/download-artifact@v3
