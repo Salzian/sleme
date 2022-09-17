@@ -14,6 +14,9 @@ jobs:
     # Only run the CD on releases
     if: github.event_name == 'release' && github.event.action == 'released'
     environment: prod
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
 
     steps:
       - name: Checkout code
