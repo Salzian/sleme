@@ -1,5 +1,9 @@
 on:
   workflow_call:
+    inputs:
+      application-name:
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -35,7 +39,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: build-${{ github.sha }}
+          name: build-${{ github.sha }}-{{ inputs.application-name }}
           path: ./build
 
       # TODO - run: yarn run deploy:prod

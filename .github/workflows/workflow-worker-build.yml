@@ -4,6 +4,9 @@ on:
       working-directory:
         required: true
         type: string
+      application-name:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -51,5 +54,5 @@ jobs:
         if: github.event_name == 'release'
         uses: actions/upload-artifact@v3
         with:
-          name: build-${{ github.sha }}
-          path: ./build
+          name: build-${{ github.sha }}-${{ inputs.application-name }}
+          path: ./{{ inputs.working-directory }}/build

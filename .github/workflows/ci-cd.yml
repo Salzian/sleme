@@ -43,8 +43,11 @@ jobs:
     uses: ./.github/workflows/workflow-worker-build.yml
     with:
       working-directory: ./bot
+      application-name: bot
 
   deploy-bot:
     uses: ./.github/workflows/workflow-worker-deploy.yml
     needs:
       - build-bot
+    with:
+      application-name: bot
