@@ -4,6 +4,9 @@ on:
       application-name:
         required: true
         type: string
+      working-directory:
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -40,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
-          path: ./build
+          path: ./${{ inputs.working-directory }}/build
 
       # TODO - run: yarn run deploy:prod
       # TODO   env:
