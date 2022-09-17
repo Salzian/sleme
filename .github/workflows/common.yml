@@ -1,0 +1,57 @@
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    working-directory: ${{ inputs.workflow-directory }}
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup cargo cache
+        id: cache-cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: cargo-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-${{ github.ref_name }}-
+            cargo-${{ runner.os }}-main-
+            cargo-${{ runner.os }}-prod-
+            cargo-${{ runner.os }}-
+
+      - name: Setup rust toolchain
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          default: true
+          profile: minimal
+
+      - name: Install worker-build
+        if: steps.cache-cargo.outputs.cache-hit != 'true'
+        uses: actions-rs/cargo@v1
+        continue-on-error: true
+        with:
+          command: install
+          args: --bins worker-build
+
+      - name: Build
+        run: worker-build --release
+
+      - name: Upload build artifacts
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ github.sha }}
+          path: ./build

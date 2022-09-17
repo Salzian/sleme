@@ -1,8 +1,6 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::View;
-
 #[derive(Debug, Deserialize)]
 pub struct InteractivityRequest {
     #[serde(rename = "type")]
