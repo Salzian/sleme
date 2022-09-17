@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    working-directory: ${{ inputs.workflow-directory }}
+    working-directory: ${{ inputs.working-directory }}
     if: github.event.pull_request.draft == false
 
     steps:
