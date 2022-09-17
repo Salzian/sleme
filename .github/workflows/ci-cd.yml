@@ -34,9 +34,9 @@ concurrency:
 
 jobs:
   build:
-    uses: ./.github/workflows/common.yml
+    uses: ./.github/workflows/workflow-worker-build.yml
     with:
-      working-directory: ./bot
+      directory: ./bot
 
   # TODO Add deploy stage
 
