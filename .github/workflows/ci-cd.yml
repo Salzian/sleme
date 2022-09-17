@@ -39,53 +39,16 @@ concurrency:
   group: ${{ github.ref }}
 
 jobs:
-  build:
+  build-bot:
     uses: ./.github/workflows/workflow-worker-build.yml
     with:
+      application-name: bot
       working-directory: ./bot
 
-  # TODO Add deploy stage
-
-  deploy:
-    runs-on: ubuntu-latest
-    # Only run the CD on releases
-    if: github.event_name == 'release' && github.event.action == 'released'
-    environment: prod
+  deploy-bot:
+    uses: ./.github/workflows/workflow-worker-deploy.yml
     needs:
-      - build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - run: yarn install --frozen-lockfile
-
-      - name: Setup cargo cache
-        id: cache-cargo
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: cargo-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            cargo-${{ runner.os }}-${{ github.ref_name }}-
-            cargo-${{ runner.os }}-main-
-            cargo-${{ runner.os }}-prod-
-            cargo-${{ runner.os }}-
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-${{ github.sha }}
-          path: ./build
-
-      - run: yarn run deploy:prod
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - build-bot
+    with:
+      application-name: bot
+      working-directory: ./bot
