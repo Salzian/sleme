@@ -12,8 +12,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # Only run the CD on releases
-    # TODO if: github.event_name == 'release' && github.event.action == 'released'
-    # TODO environment: prod
+    if: github.event_name == 'release' && github.event.action == 'released'
+    environment: prod
 
     steps:
       - name: Checkout code
@@ -45,7 +45,8 @@ jobs:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
           path: ${{ inputs.working-directory }}/build
 
-      # TODO - run: yarn run deploy:prod
-      # TODO   env:
-      # TODO     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      # TODO     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - run: yarn run deploy:prod
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
