@@ -1,14 +1,16 @@
 on:
   workflow_call:
     inputs:
-      directory:
+      working-directory:
         required: true
         type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    working-directory: ${{ inputs.directory }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
     if: github.event.pull_request.draft == false
 
     steps:

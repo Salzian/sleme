@@ -4,17 +4,21 @@ on:
   push:
     branches:
       - main
+
     paths-ignore:
       - '**.md'
       - '**/package.json'
       - '**/yarn.lock'
+
   pull_request:
     branches:
       - main
+
     paths-ignore:
       - '**.md'
       - '**/package.json'
       - '**/yarn.lock'
+
     types:
       # default events
       - opened
@@ -23,9 +27,11 @@ on:
 
       # Run CI when PR is undrafted. Otherwise, another push is required.
       - ready_for_review
+
   release:
     types:
       - released
+
   repository_dispatch: # Needed for Cloudflare Deploy button
 
 concurrency:
@@ -36,7 +42,7 @@ jobs:
   build:
     uses: ./.github/workflows/workflow-worker-build.yml
     with:
-      directory: ./bot
+      working-directory: ./bot
 
   # TODO Add deploy stage
 
