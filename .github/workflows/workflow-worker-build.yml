@@ -55,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
-          path: ./${{ inputs.working-directory }}/build
+          path: ${{ inputs.working-directory }}/build
