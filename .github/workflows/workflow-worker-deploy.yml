@@ -48,8 +48,8 @@ jobs:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
           path: ${{ inputs.working-directory }}/build
 
-      - run: yarn run deploy:prod
-        working-directory: ${{ inputs.working-directory }}
+      - name: Deploy to Cloudflare
+        run: yarn run deploy:prod
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

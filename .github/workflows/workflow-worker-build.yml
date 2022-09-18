@@ -41,7 +41,7 @@ jobs:
           default: true
           profile: minimal
 
-      - name: Install worker-build
+      - name: Install worker-build tool
         if: steps.cache-cargo.outputs.cache-hit != 'true'
         uses: actions-rs/cargo@v1
         continue-on-error: true
@@ -50,7 +50,6 @@ jobs:
           args: --bins worker-build
 
       - name: Build worker
-        working-directory: ${{ inputs.working-directory }}
         run: worker-build --release
 
       - name: Upload build artifacts
