@@ -34,7 +34,6 @@ jobs:
     uses: ./.github/workflows/workflow-worker-build.yml
     with:
       application-name: bot
-      working-directory: ./bot
 
   deploy-bot:
     uses: ./.github/workflows/workflow-worker-deploy.yml
@@ -43,7 +42,6 @@ jobs:
       - build-bot
     with:
       application-name: bot
-      working-directory: ./bot
 
   deploy-bot-dry-run:
     uses: ./.github/workflows/workflow-worker-deploy-dry-run.yml
@@ -52,4 +50,3 @@ jobs:
       - build-bot
     with:
       application-name: bot
-      working-directory: ./bot
