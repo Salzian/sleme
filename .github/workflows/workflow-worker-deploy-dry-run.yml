@@ -4,9 +4,6 @@ on:
       application-name:
         required: true
         type: string
-      working-directory:
-        required: true
-        type: string
 
 jobs:
   deploy:
