@@ -44,6 +44,16 @@ jobs:
 
   deploy-bot:
     uses: ./.github/workflows/workflow-worker-deploy.yml
+    if: github.event_name == 'release' && github.event.action == 'released'
+    needs:
+      - build-bot
+    with:
+      application-name: bot
+      working-directory: ./bot
+
+  deploy-bot-dry-run:
+    uses: ./.github/workflows/workflow-worker-deploy-dry-run.yml
+    if: github.event_name != 'release'
     needs:
       - build-bot
     with:
