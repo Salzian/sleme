@@ -25,9 +25,6 @@ on:
       - synchronize
       - reopened
 
-      # Run CI when PR is undrafted. Otherwise, another push is required.
-      - ready_for_review
-
   release:
     types:
       - released
