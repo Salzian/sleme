@@ -19,12 +19,6 @@ on:
       - '**/package.json'
       - '**/yarn.lock'
 
-    types:
-      # default events
-      - opened
-      - synchronize
-      - reopened
-
   release:
     types:
       - released
