@@ -7,9 +7,8 @@ on:
 
 jobs:
   deploy:
-    name: Deploy ${{ inputs.application-name }}
+    name: "[DRY-RUN] Deploy ${{ inputs.application-name }}"
     runs-on: ubuntu-latest
-    environment: prod
     defaults:
       run:
         working-directory: ./${{ inputs.application-name }}
@@ -44,8 +43,9 @@ jobs:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
           path: ${{ inputs.working-directory }}/build
 
-      - name: Deploy to Cloudflare
-        run: yarn run deploy:prod
+      - name: Deploy to Cloudflare (dry-run)
+        if: inputs.dry-run == true
+        run: yarn run deploy:prod --dry-run
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

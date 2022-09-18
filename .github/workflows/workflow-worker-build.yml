@@ -4,16 +4,14 @@ on:
       application-name:
         required: true
         type: string
-      working-directory:
-        required: true
-        type: string
 
 jobs:
   build:
+    name: Build ${{ inputs.application-name }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ./${{ inputs.application-name }}
 
     steps:
       - name: Checkout
@@ -53,7 +51,6 @@ jobs:
         run: worker-build --release
 
       - name: Upload build artifacts
-        if: github.event_name == 'release'
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ github.sha }}-${{ inputs.application-name }}
