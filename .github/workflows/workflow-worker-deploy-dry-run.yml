@@ -9,8 +9,6 @@ jobs:
   deploy:
     name: "[DRY-RUN] Deploy ${{ inputs.application-name }}"
     runs-on: ubuntu-latest
-
-    environment: prod
     defaults:
       run:
         working-directory: ./${{ inputs.application-name }}
