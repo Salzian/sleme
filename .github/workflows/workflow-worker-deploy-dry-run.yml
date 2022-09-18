@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    name: [DRY-RUN] Deploy ${{ inputs.application-name }}
+    name: "[DRY-RUN] Deploy ${{ inputs.application-name }}"
     runs-on: ubuntu-latest
 
     environment: prod
