@@ -8,7 +8,7 @@ pub struct PlainTextInput {
 }
 
 impl PlainTextInput {
-    fn new(action_id: String) -> Self {
+    pub(crate) fn new(action_id: String) -> Self {
         PlainTextInput {
             type_: "plain_text_input".to_string(),
             action_id,

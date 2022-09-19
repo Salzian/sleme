@@ -10,7 +10,7 @@ pub mod view_type;
 // TODO Cleanup unused
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct View {
+pub(crate) struct View {
     /// The type of view. Set to modal for modals and home for Home tabs.
     #[serde(rename = "type")]
     pub type_: ViewType,
@@ -75,4 +75,22 @@ pub struct View {
     /// Used for modals.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub submit_disabled: Option<bool>,
+}
+
+impl View {
+    pub(crate) fn simple_modal(title: &str, submit_button_text: &str, blocks: Vec<Block>) -> View {
+        View {
+            type_: ViewType::Modal,
+            title: PlainText::new(title),
+            blocks,
+            close: None,
+            submit: Some(PlainText::new(submit_button_text)),
+            private_metadata: None,
+            callback_id: Some("my-callback-id".to_string()),
+            clear_on_close: None,
+            notify_on_close: None,
+            external_id: None,
+            submit_disabled: None,
+        }
+    }
 }

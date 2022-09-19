@@ -2,7 +2,7 @@ use crate::slack::form_data;
 use worker::FormData;
 
 #[derive(Debug)]
-pub struct SlashCommandFormData {
+pub(crate) struct SlashCommandFormData {
     pub token: String,
     team_id: String,
     team_domain: String,
@@ -20,7 +20,7 @@ pub struct SlashCommandFormData {
 }
 
 impl SlashCommandFormData {
-    pub fn from_form_data(form_data: FormData) -> Self {
+    pub(crate) fn from_form_data(form_data: FormData) -> Self {
         Self {
             token: form_data::form_data_entry_as_string(&form_data, "token")
                 .expect("Request form data is missing required field: token"),

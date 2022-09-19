@@ -1,12 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+  <configuration default="false" name="Bot: tunnel" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/bot/package.json" />
     <command value="run" />
     <scripts>
-      <script value="dev" />
+      <script value="tunnel" />
     </scripts>
     <node-interpreter value="project" />
-    <envs />
+    <envs>
+      <env name="CLOUDFLARE_TUNNEL_NAME" value="sleme-dev" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>

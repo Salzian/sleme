@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
+pub(crate) type PlainTextLabel = PlainText;
+
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PlainText {
+pub(crate) struct PlainText {
     #[serde(rename = "type")]
     type_: String,
 
@@ -15,7 +17,7 @@ pub struct PlainText {
 }
 
 impl PlainText {
-    pub fn new(text: &str) -> Self {
+    pub(crate) fn new(text: &str) -> Self {
         Self {
             type_: "plain_text".to_string(),
             text: text.to_string(),
